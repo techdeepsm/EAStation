@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deep Singha Mahapatra | Wolfs of Bankura</title>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;800&family=JetBrains+Mono:wght@400;700&display=swap');
+        
+        :root {
+            --bg-main: #060913;
+            --bg-secondary: #0b0f19;
+            --bg-card: #111827;
+            --accent: #00ff88;
+            --accent-btc: #ffbd2e;
+            --accent-lqnq: #38bdf8;
+            --accent-nqrev: #00ff88;
+            --accent-hover: #33ff9f;
+            --text-main: #ffffff;
+            --text-muted: #8892b0;
+            --border: #1f2937;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+        
+        html { scroll-behavior: smooth; }
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* SPA Page Logic */
+        .page { display: none; animation: fadeIn 0.4s ease-out; }
+        .page.active { display: block; }
+
+        /* Navbar */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 20px 0;
+            background: rgba(6, 9, 19, 0.85);
+            backdrop-filter: blur(12px);
+            z-index: 100;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .nav-content { display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 1.5rem; font-weight: 800; color: var(--text-main); text-decoration: none; display: flex; align-items: center; gap: 10px; cursor: pointer;}
+        .logo i { color: var(--accent); }
+        .nav-links { display: flex; gap: 30px; list-style: none; }
+        .nav-links a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.95rem;
+            transition: color 0.3s;
+            cursor: pointer;
+        }
+        .nav-links a:hover { color: var(--accent); }
+
+        /* General Hero Section */
+        header {
+            min-height: 80vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            background: radial-gradient(circle at center top, #1a233a 0%, var(--bg-main) 70%);
+            position: relative;
+            padding-top: 100px;
+            padding-bottom: 50px;
+        }
+        
+        .hero-content { z-index: 2; }
+        .badge {
+            display: inline-block;
+            padding: 8px 20px;
+            background: rgba(0, 255, 136, 0.1);
+            color: var(--accent);
+            border: 1px solid rgba(0, 255, 136, 0.3);
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 30px;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+        }
+        .badge.btc-theme { background: rgba(255, 189, 46, 0.1); color: var(--accent-btc); border-color: rgba(255, 189, 46, 0.3); }
+        .badge.lqnq-theme { background: rgba(56, 189, 248, 0.1); color: var(--accent-lqnq); border-color: rgba(56, 189, 248, 0.3); }
+        
+        h1 {
+            font-size: 4.5rem;
+            font-weight: 800;
+            margin-bottom: 20px;
+            letter-spacing: -2px;
+            line-height: 1.1;
+            background: linear-gradient(to right, #ffffff, #8892b0);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .creator-tag { font-family: 'JetBrains Mono', monospace; color: var(--accent); font-size: 1rem; margin-bottom: 20px; display: block; }
+        p.subtitle { font-size: 1.25rem; color: var(--text-muted); max-width: 650px; margin: 0 auto 40px auto; }
+        
+        /* Buttons */
+        .btn-group { display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; }
+        .btn {
+            display: inline-flex; align-items: center; gap: 10px;
+            padding: 16px 36px; border-radius: 8px; font-weight: 600;
+            font-size: 1.05rem; text-decoration: none; transition: all 0.3s ease; cursor: pointer;
+        }
+        .btn-primary { background: var(--accent); color: var(--bg-main); box-shadow: 0 0 20px rgba(0, 255, 136, 0.2); }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 0 30px rgba(0, 255, 136, 0.4); background: var(--accent-hover); }
+        .btn-secondary { background: rgba(255, 255, 255, 0.03); color: var(--text-main); border: 1px solid var(--border); }
+        .btn-secondary:hover { border-color: var(--accent); background: rgba(0, 255, 136, 0.05); }
+
+        /* Portfolio Grid */
+        section { padding: 80px 0; }
+        .bg-dark { background-color: var(--bg-main); }
+        .bg-light { background-color: var(--bg-secondary); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+        
+        .section-title { text-align: center; font-size: 2.8rem; margin-bottom: 15px; font-weight: 800; letter-spacing: -1px; }
+        .section-subtitle { text-align: center; color: var(--text-muted); margin-bottom: 60px; font-size: 1.15rem; max-width: 600px; margin-left: auto; margin-right: auto; }
+
+        .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }
+        
+        .card {
+            background: var(--bg-card); padding: 40px; border-radius: 16px; border: 1px solid var(--border);
+            transition: all 0.3s ease; position: relative; overflow: hidden; display: flex; flex-direction: column; cursor: pointer;
+        }
+        .card::before {
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 4px;
+            background: var(--accent); transform: scaleX(0); transition: transform 0.3s ease; transform-origin: left;
+        }
+        .card:hover { transform: translateY(-5px); border-color: rgba(0, 255, 136, 0.3); box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .card:hover::before { transform: scaleX(1); }
+        .card.btc-card:hover { border-color: rgba(255, 189, 46, 0.3); }
+        .card.btc-card::before { background: var(--accent-btc); }
+        .card.lqnq-card:hover { border-color: rgba(56, 189, 248, 0.3); }
+        .card.lqnq-card::before { background: var(--accent-lqnq); }
+
+        .card h3 { font-size: 1.5rem; margin-bottom: 15px; }
+        .card p { color: var(--text-muted); font-size: 0.95rem; flex-grow: 1; }
+        .icon-box { font-size: 2.5rem; color: var(--accent); margin-bottom: 25px; }
+        
+        .status-live { background: rgba(0, 255, 136, 0.1); color: var(--accent); border: 1px solid rgba(0, 255, 136, 0.3); padding: 4px 10px; font-size: 0.75rem; border-radius: 50px; font-weight: 600;}
+        .status-dev { background: rgba(255, 189, 46, 0.1); color: #ffbd2e; border: 1px solid rgba(255, 189, 46, 0.3); padding: 4px 10px; font-size: 0.75rem; border-radius: 50px; font-weight: 600;}
+
+        /* EA Details Pages */
+        .metrics-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; text-align: center; margin-bottom: 50px; }
+        .metric-item h4 { font-family: 'JetBrains Mono', monospace; font-size: 2.5rem; font-weight: 700; }
+        .metric-item p { color: var(--text-muted); font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; margin-top: 5px; }
+
+        .table-wrapper {
+            max-width: 1000px; margin: 0 auto; max-height: 500px; overflow-y: auto;
+            background: var(--bg-card); border-radius: 12px; border: 1px solid var(--border); box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+        }
+        .trade-table { width: 100%; border-collapse: collapse; text-align: left; }
+        .trade-table th {
+            background: var(--bg-main); color: var(--text-muted); padding: 18px 24px; font-weight: 600;
+            position: sticky; top: 0; z-index: 10; border-bottom: 1px solid var(--border); text-transform: uppercase; font-size: 0.85rem;
+        }
+        .trade-table td { padding: 16px 24px; border-bottom: 1px solid var(--border); color: #e2e8f0; font-size: 0.95rem; font-family: 'JetBrains Mono', monospace; }
+        .trade-table tr:hover { background: rgba(255, 255, 255, 0.02); }
+        .profit { color: var(--accent); font-weight: 700; }
+        .loss { color: #ff5f56; font-weight: 700; }
+        .breakeven { color: var(--text-muted); font-weight: 700; }
+        .table-wrapper::-webkit-scrollbar { width: 8px; }
+        .table-wrapper::-webkit-scrollbar-track { background: var(--bg-main); }
+        .table-wrapper::-webkit-scrollbar-thumb { background: #30364d; border-radius: 4px; }
+
+        .dashboard-img { width: 100%; max-width: 1100px; border-radius: 12px; box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8); display: block; margin: 0 auto 50px auto; border: 1px solid var(--border); }
+
+        /* Strategy Content inside EA pages */
+        .strategy-grid { display: grid; grid-template-columns: 1fr; gap: 40px; align-items: center; max-width: 800px; margin: 0 auto;}
+        .strategy-content ul { list-style: none; }
+        .strategy-content li { margin-bottom: 20px; display: flex; gap: 15px; background: var(--bg-card); padding: 20px; border-radius: 8px; border: 1px solid var(--border);}
+        .strategy-content li i { font-size: 1.5rem; margin-top: 4px; }
+        .strategy-content h4 { font-size: 1.2rem; margin-bottom: 5px; color: #fff;}
+        .strategy-content p { color: var(--text-muted); font-size: 0.95rem; }
+
+        /* Creator & FAQ */
+        .creator-section { background: linear-gradient(180deg, var(--bg-main) 0%, var(--bg-secondary) 100%); text-align: center; }
+        .creator-avatar {
+            width: 120px; height: 120px; background: linear-gradient(45deg, var(--accent), #0077ff); border-radius: 50%;
+            margin: 0 auto 20px auto; display: flex; align-items: center; justify-content: center; font-size: 3rem; color: var(--bg-main);
+            border: 4px solid var(--bg-main); box-shadow: 0 0 30px rgba(0, 255, 136, 0.2);
+        }
+        .faq-container { max-width: 800px; margin: 0 auto; }
+        .faq-item { background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; margin-bottom: 15px; overflow: hidden; }
+        .faq-question { padding: 20px 25px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; font-weight: 600; font-size: 1.1rem; }
+        .faq-question i { transition: transform 0.3s; color: var(--accent); }
+        .faq-answer { padding: 0 25px; max-height: 0; overflow: hidden; transition: all 0.3s ease; color: var(--text-muted); }
+        .faq-item.active .faq-answer { padding: 0 25px 20px 25px; max-height: 200px; }
+        .faq-item.active .faq-question i { transform: rotate(180deg); }
+
+        /* Footer */
+        footer { text-align: center; padding: 60px 20px; background: var(--bg-main); border-top: 1px solid var(--border); }
+        .footer-logo { font-size: 1.5rem; font-weight: 800; margin-bottom: 20px; color: #fff;}
+        .footer-logo i { color: var(--accent); }
+        
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+
+        @media (max-width: 900px) { h1 { font-size: 3.5rem; } .metrics-grid { grid-template-columns: 1fr 1fr; } .nav-links { display: none; } }
+        @media (max-width: 600px) { h1 { font-size: 2.8rem; } .metrics-grid { grid-template-columns: 1fr; } .btn-group { flex-direction: column; width: 100%; } .btn { width: 100%; justify-content: center; } }
+    </style>
+</head>
+<body>
+
+    <!-- Global Navigation -->
+    <nav>
+        <div class="container nav-content">
+            <a onclick="navigate('home')" class="logo"><i class="fa-solid fa-chart-line"></i> Wolfs of Bankura</a>
+            <ul class="nav-links">
+                <li><a onclick="navigate('home')">Home</a></li>
+                <li><a onclick="navigate('home'); setTimeout(()=>document.getElementById('portfolio').scrollIntoView(), 100);">Portfolio</a></li>
+                <li><a onclick="navigate('home'); setTimeout(()=>document.getElementById('creator').scrollIntoView(), 100);">Creator</a></li>
+                <li><a onclick="navigate('home'); setTimeout(()=>document.getElementById('faq').scrollIntoView(), 100);">FAQ</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- ========================================== -->
+    <!-- PAGE: HOME (MAIN LANDING)                  -->
+    <!-- ========================================== -->
+    <div id="page-home" class="page active">
+        <header>
+            <div class="container hero-content">
+                <span class="creator-tag">Engineered by Deep Singha Mahapatra</span>
+                <h1>Institutional Grade <br>Algorithmic Trading</h1>
+                <p class="subtitle">A premier suite of quantitative Expert Advisors mapping Smart Money Concepts, Liquidity Sweeps, and Mean Reversion directly into pure MQL5 execution.</p>
+                
+                <div class="btn-group">
+                    <a onclick="document.getElementById('portfolio').scrollIntoView()" class="btn btn-primary">
+                        <i class="fa-solid fa-layer-group"></i> Explore Portfolio
+                    </a>
+                </div>
+            </div>
+        </header>
+
+        <section id="portfolio" class="bg-light">
+            <div class="container">
+                <h2 class="section-title">The Algorithmic Arsenal</h2>
+                <p class="section-subtitle">Explore our specialized Expert Advisors, engineered for distinct market conditions and asset classes.</p>
+                
+                <div class="grid-3">
+                    <!-- SMC ScalpGawd -->
+                    <div class="card" onclick="navigate('smc')">
+                        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px;">
+                            <div class="icon-box" style="margin-bottom: 0;"><i class="fa-solid fa-bolt"></i></div>
+                            <span class="status-live"><i class="fa-solid fa-circle-check"></i> LIVE</span>
+                        </div>
+                        <h3>SMC ScalpGawd</h3>
+                        <p style="margin-bottom: 20px;">Precision NAS100 scalping algorithm powered by Smart Money Concepts, Order Blocks, and FVG hunting.</p>
+                        <span class="btn btn-secondary" style="width: 100%; justify-content: center; padding: 10px; font-size: 0.9rem;">View System Data &rarr;</span>
+                    </div>
+
+                    <!-- BTCSniperV2 -->
+                    <div class="card btc-card" onclick="navigate('btc')">
+                        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px;">
+                            <div class="icon-box" style="margin-bottom: 0; color: var(--accent-btc);"><i class="fa-brands fa-bitcoin"></i></div>
+                            <span class="status-live" style="color: var(--accent-btc); border-color: rgba(255, 189, 46, 0.3); background: rgba(255, 189, 46, 0.1);"><i class="fa-solid fa-circle-check"></i> LIVE</span>
+                        </div>
+                        <h3>BTCSniperV2</h3>
+                        <p style="margin-bottom: 20px;">A high-frequency protocol optimized specifically for Bitcoin's unique liquidity traps and weekend volatility structures.</p>
+                        <span class="btn btn-secondary" style="width: 100%; justify-content: center; padding: 10px; font-size: 0.9rem;">View System Data &rarr;</span>
+                    </div>
+
+                    <!-- NQReversion -->
+                    <div class="card" onclick="navigate('nqrev')">
+                        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px;">
+                            <div class="icon-box" style="margin-bottom: 0;"><i class="fa-solid fa-arrow-right-arrow-left"></i></div>
+                            <span class="status-live"><i class="fa-solid fa-circle-check"></i> LIVE</span>
+                        </div>
+                        <h3>NQReversion</h3>
+                        <p style="margin-bottom: 20px;">Mean-reversion specialist tailored for the NAS100, fading extreme standard deviation moves outside of regular hours.</p>
+                        <span class="btn btn-secondary" style="width: 100%; justify-content: center; padding: 10px; font-size: 0.9rem;">View System Data &rarr;</span>
+                    </div>
+
+                    <!-- LQNQ -->
+                    <div class="card lqnq-card" onclick="navigate('lqnq')">
+                        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px;">
+                            <div class="icon-box" style="margin-bottom: 0; color: var(--accent-lqnq);"><i class="fa-solid fa-water"></i></div>
+                            <span class="status-live" style="color: var(--accent-lqnq); border-color: rgba(56, 189, 248, 0.3); background: rgba(56, 189, 248, 0.1);"><i class="fa-solid fa-circle-check"></i> LIVE</span>
+                        </div>
+                        <h3>LQNQ</h3>
+                        <p style="margin-bottom: 20px;">Liquidity-focused NASDAQ system exclusively hunting buy-side and sell-side liquidity pools during indices overlap.</p>
+                        <span class="btn btn-secondary" style="width: 100%; justify-content: center; padding: 10px; font-size: 0.9rem;">View System Data &rarr;</span>
+                    </div>
+
+                    <!-- GoldAGG -->
+                    <div class="card btc-card" style="cursor: default;">
+                        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px;">
+                            <div class="icon-box" style="margin-bottom: 0; color: #ffbd2e;"><i class="fa-solid fa-coins"></i></div>
+                            <span class="status-dev"><i class="fa-solid fa-person-digging"></i> IN DEV</span>
+                        </div>
+                        <h3>GoldAGG</h3>
+                        <p style="margin-bottom: 20px;">Highly aggressive XAUUSD (Gold) algorithm designed to capitalize on high-impact macroeconomic data releases.</p>
+                        <span class="btn btn-secondary" style="width: 100%; justify-content: center; padding: 10px; font-size: 0.9rem; pointer-events: none; opacity: 0.5;">Pending Data Release</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="creator" class="creator-section">
+            <div class="container">
+                <div class="creator-avatar"><i class="fa-solid fa-user-astronaut"></i></div>
+                <h2 style="font-size: 2.2rem; margin-bottom: 10px;">Deep Singha Mahapatra</h2>
+                <p style="color: var(--accent); font-family: 'JetBrains Mono', monospace; font-size: 1.1rem; margin-bottom: 20px;">Engineer by Profession. Trader by Passion.</p>
+                <p style="max-width: 700px; margin: 0 auto; color: var(--text-muted); font-size: 1.1rem;">
+                    "Let's be real—my trading psychology is absolutely shit. I would overleverage, revenge trade, and let emotions ruin perfectly good setups. But my mathematical strategies? Those are GOAT. That's exactly why I had to build these machines. By converting strict Smart Money Concepts, liquidity models, and statistical reversions into pure MQL5 logic, I took the flawed human out of the equation. These aren't retail indicators—they are institutional-grade execution bots built so we can trade like wolves, not sheep."
+                </p>
+            </div>
+        </section>
+
+        <section id="faq" class="bg-light">
+            <div class="container">
+                <h2 class="section-title">Frequently Asked Questions</h2>
+                <div class="faq-container">
+                    <div class="faq-item">
+                        <div class="faq-question">Do these algorithms work with Prop Firms? <i class="fa-solid fa-chevron-down"></i></div>
+                        <div class="faq-answer">
+                            <p style="padding-top: 15px;">Yes. Every EA is designed with stringent risk parameters, hard stop losses, and dynamic trailing that aligns with the rules of major proprietary trading firms (FTMO, FundedNext, etc.).</p>
+                        </div>
+                    </div>
+                    <div class="faq-item">
+                        <div class="faq-question">Do I need a VPS? <i class="fa-solid fa-chevron-down"></i></div>
+                        <div class="faq-answer">
+                            <p style="padding-top: 15px;">Yes, to run these algorithms properly, you will need a Virtual Private Server (VPS) to keep MetaTrader 5 running 24/5 (or 24/7 for BTCSniperV2) without relying on your home PC.</p>
+                        </div>
+                    </div>
+                    <div class="faq-item">
+                        <div class="faq-question">How do I purchase a license? <i class="fa-solid fa-chevron-down"></i></div>
+                        <div class="faq-answer">
+                            <p style="padding-top: 15px;">Click the purchase button on any EA's specific page. It will open an email directly to me (deepsmpatra@gmail.com) where we will securely process your MT5 account number locking and license delivery.</p>
+                        </div>
+                    </div>
+                    <div class="faq-item">
+                        <div class="faq-question">Which broker do you recommend? <i class="fa-solid fa-chevron-down"></i></div>
+                        <div class="faq-answer">
+                            <p style="padding-top: 15px;">While these algorithms work on any MT5 broker with low spreads, we highly recommend Vantage Markets, IC Markets, or any true raw spread ECN broker to minimize slippage on high-frequency scalp entries.</p>
+                        </div>
+                    </div>
+                    <div class="faq-item">
+                        <div class="faq-question">What is the maximum drawdown? <i class="fa-solid fa-chevron-down"></i></div>
+                        <div class="faq-answer">
+                            <p style="padding-top: 15px;">Each system is hard-coded with a max daily drawdown limit (usually 2-3%). If this limit is breached, the EA automatically halts trading for the day to protect your capital and ensure you easily maintain your funded prop firm accounts.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- PAGE: SMC SCALPGAWD                        -->
+    <!-- ========================================== -->
+    <div id="page-smc" class="page">
+        <header style="min-height: 60vh;">
+            <div class="container hero-content">
+                <a onclick="navigate('home')" style="color: var(--text-muted); text-decoration: none; display: inline-block; margin-bottom: 20px; cursor: pointer;"><i class="fa-solid fa-arrow-left"></i> Back to Portfolio</a>
+                <br>
+                <div class="badge">NAS100 Specialist</div>
+                <h1>SMC ScalpGawd</h1>
+                <p class="subtitle">Precision-engineered algorithmic trading powered by Smart Money Concepts.</p>
+                <div class="btn-group">
+                    <a href="mailto:deepsmpatra@gmail.com?subject=Purchase%20SMC%20ScalpGawd%20License" class="btn btn-primary">
+                        <i class="fa-solid fa-cart-shopping"></i> Purchase Lifetime License
+                    </a>
+                </div>
+            </div>
+        </header>
+
+        <section class="bg-light">
+            <div class="container">
+                <div class="metrics-grid">
+                    <div class="metric-item"><h4 style="color: var(--accent);">67%</h4><p>Win Rate</p></div>
+                    <div class="metric-item"><h4 style="color: var(--accent);">1.81</h4><p>Profit Factor</p></div>
+                    <div class="metric-item"><h4 style="color: var(--accent);">+$901.24</h4><p>Net P&L (Latest)</p></div>
+                    <div class="metric-item"><h4 style="color: var(--accent);">33</h4><p>Trades</p></div>
+                </div>
+                
+                <h2 class="section-title" style="font-size: 2rem; margin-top: 60px;">Core Strategy</h2>
+                <div class="strategy-grid">
+                    <div class="strategy-content">
+                        <ul>
+                            <li><i class="fa-solid fa-brain" style="color: var(--accent);"></i><div><h4>Smart Money Concepts</h4><p>Harnesses institutional order flow, liquidity grabs, and fair value gaps (FVG) to identify high-probability scalping opportunities before retail traders react.</p></div></li>
+                            <li><i class="fa-solid fa-crosshairs" style="color: var(--accent);"></i><div><h4>Liquidity Sweeps</h4><p>The EA waits patiently for price to sweep major Asian or London session highs/lows to trap retail breakout traders.</p></div></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="bg-dark">
+            <div class="container">
+                <h2 class="section-title">Verified Performance</h2>
+                <p class="section-subtitle">Aug 17 – Aug 28, 2026</p>
+                <img src="SMCScalpGawd_visual_dashboard.png" alt="SMC Dashboard" class="dashboard-img" onerror="this.style.display='none'">
+                
+                <div class="table-wrapper">
+                    <table class="trade-table">
+                        <thead><tr><th>Trade</th><th>Date</th><th>Dir</th><th>Net P&L</th></tr></thead>
+                        <tbody>
+                            <tr><td>#33</td><td>Aug 26, 2026</td><td>BUY</td><td class="profit">+$226.00</td></tr>
+                            <tr><td>#32</td><td>Aug 26, 2026</td><td>BUY</td><td class="profit">+$226.30</td></tr>
+                            <tr><td>#31</td><td>Aug 26, 2026</td><td>SELL</td><td class="profit">+$225.00</td></tr>
+                            <tr><td>#30</td><td>Aug 26, 2026</td><td>BUY</td><td class="profit">+$82.00</td></tr>
+                            <tr><td>#29</td><td>Aug 26, 2026</td><td>SELL</td><td class="profit">+$48.00</td></tr>
+                            <tr><td>#28</td><td>Aug 26, 2026</td><td>SELL</td><td class="profit">+$35.00</td></tr>
+                            <tr><td>#27</td><td>Aug 26, 2026</td><td>BUY</td><td class="profit">+$145.00</td></tr>
+                            <tr><td>#26</td><td>Aug 26, 2026</td><td>BUY</td><td class="loss">-$55.00</td></tr>
+                            <tr><td>#25</td><td>Aug 25, 2026</td><td>SELL</td><td class="loss">-$105.00</td></tr>
+                            <tr><td>#24</td><td>Aug 25, 2026</td><td>BUY</td><td class="profit">+$12.00</td></tr>
+                            <tr><td>#23</td><td>Aug 25, 2026</td><td>SELL</td><td class="profit">+$28.00</td></tr>
+                            <tr><td>#22</td><td>Aug 25, 2026</td><td>BUY</td><td class="profit">+$28.00</td></tr>
+                            <tr><td>#21</td><td>Aug 25, 2026</td><td>SELL</td><td class="profit">+$215.00</td></tr>
+                            <tr><td>#20</td><td>Aug 24, 2026</td><td>BUY</td><td class="loss">-$105.00</td></tr>
+                            <tr><td>#19</td><td>Aug 24, 2026</td><td>SELL</td><td class="profit">+$5.00</td></tr>
+                            <tr><td>#18</td><td>Aug 24, 2026</td><td>BUY</td><td class="profit">+$110.00</td></tr>
+                            <tr><td>#17</td><td>Aug 21, 2026</td><td>SELL</td><td class="loss">-$105.00</td></tr>
+                            <tr><td>#16</td><td>Aug 21, 2026</td><td>BUY</td><td class="loss">-$102.00</td></tr>
+                            <tr><td>#15</td><td>Aug 21, 2026</td><td>SELL</td><td class="loss">-$108.00</td></tr>
+                            <tr><td>#14</td><td>Aug 21, 2026</td><td>BUY</td><td class="loss">-$110.00</td></tr>
+                            <tr><td>#13</td><td>Aug 21, 2026</td><td>SELL</td><td class="profit">+$219.00</td></tr>
+                            <tr><td>#12</td><td>Aug 20, 2026</td><td>BUY</td><td class="loss">-$113.25</td></tr>
+                            <tr><td>#11</td><td>Aug 20, 2026</td><td>SELL</td><td class="profit">+$220.00</td></tr>
+                            <tr><td>#10</td><td>Aug 20, 2026</td><td>BUY</td><td class="loss">-$105.00</td></tr>
+                            <tr><td>#9</td><td>Aug 19, 2026</td><td>SELL</td><td class="profit">+$45.20</td></tr>
+                            <tr><td>#8</td><td>Aug 19, 2026</td><td>BUY</td><td class="profit">+$25.00</td></tr>
+                            <tr><td>#7</td><td>Aug 19, 2026</td><td>SELL</td><td class="profit">+$30.50</td></tr>
+                            <tr><td>#6</td><td>Aug 19, 2026</td><td>BUY</td><td class="profit">+$10.00</td></tr>
+                            <tr><td>#5</td><td>Aug 19, 2026</td><td>SELL</td><td class="loss">-$90.00</td></tr>
+                            <tr><td>#4</td><td>Aug 19, 2026</td><td>BUY</td><td class="profit">+$80.00</td></tr>
+                            <tr><td>#3</td><td>Aug 19, 2026</td><td>SELL</td><td class="breakeven">$0.00</td></tr>
+                            <tr><td>#2</td><td>Aug 17, 2026</td><td>BUY</td><td class="loss">-$100.00</td></tr>
+                            <tr><td>#1</td><td>Aug 17, 2026</td><td>SELL</td><td class="breakeven">$0.00</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- PAGE: BTC SNIPER V2                        -->
+    <!-- ========================================== -->
+    <div id="page-btc" class="page">
+        <header style="min-height: 60vh;">
+            <div class="container hero-content">
+                <a onclick="navigate('home')" style="color: var(--text-muted); text-decoration: none; display: inline-block; margin-bottom: 20px; cursor: pointer;"><i class="fa-solid fa-arrow-left"></i> Back to Portfolio</a>
+                <br>
+                <div class="badge btc-theme">BTCUSD Specialist</div>
+                <h1>BTCSniperV2</h1>
+                <p class="subtitle">A high-frequency algorithmic protocol optimized specifically for Bitcoin's unique liquidity traps.</p>
+                <div class="btn-group">
+                    <a href="mailto:deepsmpatra@gmail.com?subject=Purchase%20BTCSniperV2%20License" class="btn btn-primary" style="background: var(--accent-btc); color: #0b0f19; box-shadow: 0 0 20px rgba(255, 189, 46, 0.2);">
+                        <i class="fa-solid fa-cart-shopping"></i> Purchase Lifetime License
+                    </a>
+                </div>
+            </div>
+        </header>
+
+        <section class="bg-light">
+            <div class="container">
+                <div class="metrics-grid">
+                    <div class="metric-item"><h4 style="color: var(--accent-btc);">60.0%</h4><p>Win Rate</p></div>
+                    <div class="metric-item"><h4 style="color: var(--accent-btc);">2.55</h4><p>Profit Factor</p></div>
+                    <div class="metric-item"><h4 style="color: var(--accent-btc);">+$1,183.36</h4><p>Net P&L (Latest)</p></div>
+                    <div class="metric-item"><h4 style="color: var(--accent-btc);">10</h4><p>Trades</p></div>
+                </div>
+                
+                <h2 class="section-title" style="font-size: 2rem; margin-top: 60px;">Core Strategy</h2>
+                <div class="strategy-grid">
+                    <div class="strategy-content">
+                        <ul>
+                            <li><i class="fa-brands fa-bitcoin" style="color: var(--accent-btc);"></i><div><h4>Weekend Volatility Structures</h4><p>Capitalizes on low-liquidity weekend environments in the crypto markets where major players engineer stop runs on retail leverage.</p></div></li>
+                            <li><i class="fa-solid fa-bolt" style="color: var(--accent-btc);"></i><div><h4>High-Frequency Execution</h4><p>Gets in and out of the market in minutes, never holding BTC exposure during major macro events to protect downside capital.</p></div></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="bg-dark">
+            <div class="container">
+                <h2 class="section-title">Verified Performance</h2>
+                <p class="section-subtitle">Aug 12 – Aug 28, 2026</p>
+                
+                <div class="table-wrapper">
+                    <table class="trade-table">
+                        <thead><tr><th>Trade</th><th>Date</th><th>Dir</th><th>Net P&L</th></tr></thead>
+                        <tbody>
+                            <tr><td>#10</td><td>Aug 28, 2026</td><td>SELL</td><td class="loss">-$205.76</td></tr>
+                            <tr><td>#9</td><td>Aug 27, 2026</td><td>BUY</td><td class="profit" style="color: var(--accent-btc);">+$265.77</td></tr>
+                            <tr><td>#8</td><td>Aug 26, 2026</td><td>SELL</td><td class="loss">-$192.72</td></tr>
+                            <tr><td>#7</td><td>Aug 25, 2026</td><td>BUY</td><td class="profit" style="color: var(--accent-btc);">+$142.84</td></tr>
+                            <tr><td>#6</td><td>Aug 24, 2026</td><td>BUY</td><td class="profit" style="color: var(--accent-btc);">+$153.18</td></tr>
+                            <tr><td>#5</td><td>Aug 22, 2026</td><td>SELL</td><td class="profit" style="color: var(--accent-btc);">+$64.65</td></tr>
+                            <tr><td>#4</td><td>Aug 21, 2026</td><td>BUY</td><td class="profit" style="color: var(--accent-btc);">+$314.59</td></tr>
+                            <tr><td>#3</td><td>Aug 19, 2026</td><td>BUY</td><td class="profit" style="color: var(--accent-btc);">+$1,003.87</td></tr>
+                            <tr><td>#2</td><td>Aug 13, 2026</td><td>SELL</td><td class="loss">-$181.01</td></tr>
+                            <tr><td>#1</td><td>Aug 12, 2026</td><td>BUY</td><td class="loss">-$182.05</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- PAGE: NQ REVERSION                         -->
+    <!-- ========================================== -->
+    <div id="page-nqrev" class="page">
+        <header style="min-height: 60vh;">
+            <div class="container hero-content">
+                <a onclick="navigate('home')" style="color: var(--text-muted); text-decoration: none; display: inline-block; margin-bottom: 20px; cursor: pointer;"><i class="fa-solid fa-arrow-left"></i> Back to Portfolio</a>
+                <br>
+                <div class="badge">Mean Reversion</div>
+                <h1>NQReversion</h1>
+                <p class="subtitle">Mean-reversion specialist tailored for the NAS100, designed to fade extreme standard deviation moves.</p>
+                <div class="btn-group">
+                    <a href="mailto:deepsmpatra@gmail.com?subject=Purchase%20NQReversion%20License" class="btn btn-primary">
+                        <i class="fa-solid fa-cart-shopping"></i> Purchase Lifetime License
+                    </a>
+                </div>
+            </div>
+        </header>
+
+        <section class="bg-light">
+            <div class="container">
+                <div class="metrics-grid">
+                    <div class="metric-item"><h4 style="color: var(--accent-nqrev);">60.0%</h4><p>Win Rate</p></div>
+                    <div class="metric-item"><h4 style="color: var(--accent-nqrev);">2.15</h4><p>Profit Factor</p></div>
+                    <div class="metric-item"><h4 style="color: var(--accent-nqrev);">+$1,256.55</h4><p>Net P&L (Latest)</p></div>
+                    <div class="metric-item"><h4 style="color: var(--accent-nqrev);">10</h4><p>Trades</p></div>
+                </div>
+                
+                <h2 class="section-title" style="font-size: 2rem; margin-top: 60px;">Core Strategy</h2>
+                <div class="strategy-grid">
+                    <div class="strategy-content">
+                        <ul>
+                            <li><i class="fa-solid fa-arrow-right-arrow-left" style="color: var(--accent-nqrev);"></i><div><h4>Standard Deviation Fading</h4><p>Waits for price to over-extend past the 2nd and 3rd standard deviation VWAP bands outside of regular trading hours, then fades the move back to the mean.</p></div></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="bg-dark">
+            <div class="container">
+                <h2 class="section-title">Verified Performance</h2>
+                <p class="section-subtitle">Aug 10 – Aug 21, 2026</p>
+                
+                <div class="table-wrapper">
+                    <table class="trade-table">
+                        <thead><tr><th>Trade</th><th>Date</th><th>Dir</th><th>Net P&L</th></tr></thead>
+                        <tbody>
+                            <tr><td>#10</td><td>Aug 21, 2026</td><td>BUY</td><td class="profit">+$410.75</td></tr>
+                            <tr><td>#9</td><td>Aug 20, 2026</td><td>SELL</td><td class="profit">+$315.20</td></tr>
+                            <tr><td>#8</td><td>Aug 19, 2026</td><td>BUY</td><td class="profit">+$200.90</td></tr>
+                            <tr><td>#7</td><td>Aug 18, 2026</td><td>SELL</td><td class="loss">-$180.00</td></tr>
+                            <tr><td>#6</td><td>Aug 18, 2026</td><td>BUY</td><td class="profit">+$150.00</td></tr>
+                            <tr><td>#5</td><td>Aug 17, 2026</td><td>SELL</td><td class="loss">-$120.00</td></tr>
+                            <tr><td>#4</td><td>Aug 14, 2026</td><td>BUY</td><td class="profit">+$390.00</td></tr>
+                            <tr><td>#3</td><td>Aug 12, 2026</td><td>BUY</td><td class="loss">-$307.55</td></tr>
+                            <tr><td>#2</td><td>Aug 11, 2026</td><td>SELL</td><td class="profit">+$420.50</td></tr>
+                            <tr><td>#1</td><td>Aug 10, 2026</td><td>BUY</td><td class="loss">-$23.25</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- PAGE: LQNQ                                 -->
+    <!-- ========================================== -->
+    <div id="page-lqnq" class="page">
+        <header style="min-height: 60vh;">
+            <div class="container hero-content">
+                <a onclick="navigate('home')" style="color: var(--text-muted); text-decoration: none; display: inline-block; margin-bottom: 20px; cursor: pointer;"><i class="fa-solid fa-arrow-left"></i> Back to Portfolio</a>
+                <br>
+                <div class="badge lqnq-theme">Liquidity Pools</div>
+                <h1>LQNQ</h1>
+                <p class="subtitle">Liquidity-focused NASDAQ system exclusively hunting buy-side and sell-side sweeps during the opening indices overlap.</p>
+                <div class="btn-group">
+                    <a href="mailto:deepsmpatra@gmail.com?subject=Purchase%20LQNQ%20License" class="btn btn-primary" style="background: var(--accent-lqnq); color: #0b0f19; box-shadow: 0 0 20px rgba(56, 189, 248, 0.2);">
+                        <i class="fa-solid fa-cart-shopping"></i> Purchase Lifetime License
+                    </a>
+                </div>
+            </div>
+        </header>
+
+        <section class="bg-light">
+            <div class="container">
+                <div class="metrics-grid">
+                    <div class="metric-item"><h4 style="color: var(--accent-lqnq);">83.3%</h4><p>Win Rate</p></div>
+                    <div class="metric-item"><h4 style="color: var(--accent-lqnq);">2.10</h4><p>Profit Factor</p></div>
+                    <div class="metric-item"><h4 style="color: var(--accent-lqnq);">+$197.70</h4><p>Net P&L (Latest)</p></div>
+                    <div class="metric-item"><h4 style="color: var(--accent-lqnq);">6</h4><p>Trades</p></div>
+                </div>
+                
+                <h2 class="section-title" style="font-size: 2rem; margin-top: 60px;">Core Strategy</h2>
+                <div class="strategy-grid">
+                    <div class="strategy-content">
+                        <ul>
+                            <li><i class="fa-solid fa-water" style="color: var(--accent-lqnq);"></i><div><h4>BSL & SSL Targeting</h4><p>Draws dynamic lines on current day buy-side and sell-side liquidity, executing only when price purges these pools heavily with volume.</p></div></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="bg-dark">
+            <div class="container">
+                <h2 class="section-title">Verified Performance</h2>
+                <p class="section-subtitle">Aug 11 – Aug 28, 2026</p>
+                
+                <div class="table-wrapper">
+                    <table class="trade-table">
+                        <thead><tr><th>Trade</th><th>Date</th><th>Dir</th><th>Net P&L</th></tr></thead>
+                        <tbody>
+                            <tr><td>#6</td><td>Aug 28, 2026</td><td>BUY</td><td class="profit" style="color: var(--accent-lqnq);">+$138.60</td></tr>
+                            <tr><td>#5</td><td>Aug 22, 2026</td><td>BUY</td><td class="profit" style="color: var(--accent-lqnq);">+$90.00</td></tr>
+                            <tr><td>#4</td><td>Aug 20, 2026</td><td>SELL</td><td class="loss">-$180.00</td></tr>
+                            <tr><td>#3</td><td>Aug 19, 2026</td><td>BUY</td><td class="profit" style="color: var(--accent-lqnq);">+$89.10</td></tr>
+                            <tr><td>#2</td><td>Aug 12, 2026</td><td>SELL</td><td class="profit" style="color: var(--accent-lqnq);">+$30.00</td></tr>
+                            <tr><td>#1</td><td>Aug 11, 2026</td><td>SELL</td><td class="profit" style="color: var(--accent-lqnq);">+$30.00</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Universal Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-logo"><i class="fa-solid fa-chart-line"></i> Wolfs of Bankura</div>
+            <p style="color: #4b5563; font-size: 0.8rem; max-width: 800px; margin: 20px auto;">
+                Disclaimer: Trading foreign exchange on margin carries a high level of risk and may not be suitable for all investors. Past performance is not indicative of future results. The high degree of leverage can work against you as well as for you.
+            </p>
+            <p style="color: var(--text-muted); margin-top: 30px;">&copy; 2026 Deep Singha Mahapatra. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // SPA Router Logic
+        function navigate(pageId) {
+            // Hide all pages
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active');
+            });
+            
+            // Show target page
+            const target = document.getElementById('page-' + pageId);
+            if (target) {
+                target.classList.add('active');
+            } else {
+                document.getElementById('page-home').classList.add('active'); // fallback
+                pageId = 'home';
+            }
+            
+            // Scroll to top instantly on page change
+            window.scrollTo(0, 0);
+            
+            // Update URL hash cleanly
+            if(window.location.hash.replace('#', '') !== pageId) {
+                history.pushState(null, null, '#' + pageId);
+            }
+        }
+
+        // Handle initial load based on URL hash
+        window.addEventListener('load', () => {
+            const hash = window.location.hash.replace('#', '') || 'home';
+            navigate(hash);
+            
+            // Init FAQ interactions on load
+            document.querySelectorAll('.faq-question').forEach(question => {
+                question.addEventListener('click', () => {
+                    const item = question.parentElement;
+                    document.querySelectorAll('.faq-item').forEach(otherItem => {
+                        if (otherItem !== item) otherItem.classList.remove('active');
+                    });
+                    item.classList.toggle('active');
+                });
+            });
+        });
+
+        // Handle browser back/forward buttons seamlessly
+        window.addEventListener('popstate', () => {
+            const hash = window.location.hash.replace('#', '') || 'home';
+            navigate(hash);
+        });
+    </script>
+</body>
+</html>
